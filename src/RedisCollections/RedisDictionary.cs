@@ -59,7 +59,10 @@ namespace RedisCollections
             throw new NotImplementedException();
         }
 
-        public int Count { get; private set; }
+        public int Count
+        {
+            get { return redisClient.SearchKeys(searchPattern).Count; }
+        }
 
         public bool IsReadOnly { get; private set; }
         public bool ContainsKey(TKey key)

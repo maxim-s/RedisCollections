@@ -58,5 +58,13 @@ namespace RedisCollections.Test
             var dictionary2 = new RedisDictionary<string, string>(redisClient) { { "key", "val2" } };
             Assert.AreNotEqual(dictionary1["key"], dictionary2["key"]);
         }
+
+        [Test]
+        public void ShouldReturnItemsCount()
+        {
+            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val1" } };
+            new RedisDictionary<string, string>(redisClient) { { "key", "val2" } };
+            Assert.AreEqual(2, dictionary.Count);
+        }
     }
 }
