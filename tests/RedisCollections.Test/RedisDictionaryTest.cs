@@ -50,5 +50,13 @@ namespace RedisCollections.Test
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { null, "val1" } };
         }
+
+        [Test]
+        public void DifferentDictionariesCanHasItemsWithTheSameKey()
+        {
+            var dictionary1 = new RedisDictionary<string, string>(redisClient) { { "key", "val1" } };
+            var dictionary2 = new RedisDictionary<string, string>(redisClient) { { "key", "val2" } };
+            Assert.AreNotEqual(dictionary1["key"], dictionary2["key"]);
+        }
     }
 }

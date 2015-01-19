@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using ServiceStack;
 using ServiceStack.Redis;
 
@@ -9,10 +10,18 @@ namespace RedisCollections
     public class RedisDictionary<TKey,TValue> : IDictionary<TKey, TValue>
     {
         private readonly RedisClient redisClient;
+        private readonly string instanceKey = Guid.NewGuid().ToString();
+        private readonly string searchPattern;
+
+        private string CreateKey(string key)
+        {
+            return string.Format("{0}::{1}", instanceKey, key);
+        }
 
         public RedisDictionary(RedisClient redisClient)
         {
             this.redisClient = redisClient;
+            searchPattern = string.Format("{0}::*", instanceKey);
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
@@ -51,6 +60,7 @@ namespace RedisCollections
         }
 
         public int Count { get; private set; }
+
         public bool IsReadOnly { get; private set; }
         public bool ContainsKey(TKey key)
         {
@@ -64,11 +74,11 @@ namespace RedisCollections
                 throw new ArgumentNullException("Key cannot be null");
             }
 
-            if (redisClient.ContainsKey(key.SerializeToString()))
+            if (redisClient.ContainsKey(CreateKey(key.SerializeToString())))
             {
                 throw new ArgumentException("An item with the same key has already been added.");
             }
-            redisClient.Set(key.SerializeToString(), value);
+            redisClient.Set(CreateKey(key.SerializeToString()), value);
         }
 
         public bool Remove(TKey key)
@@ -83,7 +93,7 @@ namespace RedisCollections
 
         public TValue this[TKey key]
         {
-            get { return redisClient.Get<TValue>(key.SerializeToString()); }
+            get { return redisClient.Get<TValue>(CreateKey(key.SerializeToString())); }
             set { throw new NotImplementedException(); }
         }
 
