@@ -99,5 +99,15 @@ namespace RedisCollections.Test
             Assert.IsTrue(dictionary.TryGetValue("key1", out res));
             Assert.AreEqual("val1", res);
         }
+
+        [Test]
+        public void ShouldClearAll()
+        {
+            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val1" } };
+            dictionary.Clear();
+            Assert.False(dictionary.ContainsKey("key1"));
+            Assert.False(dictionary.ContainsKey("key2"));
+            Assert.AreEqual(0, dictionary.Count);
+        }
     }
 }

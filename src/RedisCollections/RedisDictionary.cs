@@ -41,7 +41,11 @@ namespace RedisCollections
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            var keys = SearchKeys();
+            if (keys.Count > 0)
+            {
+                redisClient.RemoveAll(keys);
+            }
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
@@ -61,7 +65,12 @@ namespace RedisCollections
 
         public int Count
         {
-            get { return redisClient.SearchKeys(searchPattern).Count; }
+            get { return SearchKeys().Count; }
+        }
+
+        private List<string> SearchKeys()
+        {
+            return redisClient.SearchKeys(searchPattern);
         }
 
         public bool IsReadOnly { get; private set; }
@@ -77,7 +86,7 @@ namespace RedisCollections
                 throw new ArgumentNullException("Key cannot be null");
             }
 
-            if (redisClient.ContainsKey(CreateKey(key.SerializeToString())))
+            if (ContainsKey(key))
             {
                 throw new ArgumentException("An item with the same key has already been added.");
             }
