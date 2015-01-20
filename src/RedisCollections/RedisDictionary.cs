@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using System.Linq;
 using ServiceStack;
 using ServiceStack.Redis;
 
@@ -10,18 +10,20 @@ namespace RedisCollections
     public class RedisDictionary<TKey,TValue> : IDictionary<TKey, TValue>
     {
         private readonly RedisClient redisClient;
-        private readonly string instanceKey = Guid.NewGuid().ToString();
+        private readonly string instanceKey;
         private readonly string searchPattern;
 
         private string CreateKey(string key)
         {
-            return string.Format("{0}::{1}", instanceKey, key);
+            return string.Format("{0}{1}", instanceKey, key);
         }
 
         public RedisDictionary(RedisClient redisClient)
         {
             this.redisClient = redisClient;
-            searchPattern = string.Format("{0}::*", instanceKey);
+
+            instanceKey = string.Format("{0}::", Guid.NewGuid());
+            searchPattern = string.Format("{0}*", instanceKey);
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
@@ -50,7 +52,14 @@ namespace RedisCollections
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            return ContainsKey(item.Key);
+            TValue val;
+            if (TryGetValue(item.Key, out val))
+            {
+                return 
+                    (item.Value == null && val == null) || item.Value.Equals(val);
+            }
+
+            return false;
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
@@ -81,10 +90,7 @@ namespace RedisCollections
 
         public void Add(TKey key, TValue value)
         {
-            if (!typeof(TKey).IsValueType() && key == null )
-            {
-                throw new ArgumentNullException("Key cannot be null");
-            }
+            CheckForNull(key);
 
             if (ContainsKey(key))
             {
@@ -95,7 +101,9 @@ namespace RedisCollections
 
         public bool Remove(TKey key)
         {
-            throw new NotImplementedException();
+            CheckForNull(key);
+
+            return redisClient.Del(key.SerializeToString()) > 0;
         }
 
         public bool TryGetValue(TKey key, out TValue value)
@@ -115,7 +123,24 @@ namespace RedisCollections
             set { throw new NotImplementedException(); }
         }
 
-        public ICollection<TKey> Keys { get; private set; }
+        public ICollection<TKey> Keys
+        {
+            get
+            {
+                return redisClient.SearchKeys(searchPattern)
+                                    .Select(a => a.TrimPrefixes(instanceKey).ToOrDefaultValue<TKey>())
+                                    .ToList();
+            }
+        }
+
         public ICollection<TValue> Values { get; private set; }
+
+        private static void CheckForNull(TKey key)
+        {
+            if (!typeof (TKey).IsValueType() && key == null)
+            {
+                throw new ArgumentNullException("Key cannot be null");
+            }
+        }
     }
 }
