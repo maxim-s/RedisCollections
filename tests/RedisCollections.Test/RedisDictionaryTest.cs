@@ -66,5 +66,20 @@ namespace RedisCollections.Test
             new RedisDictionary<string, string>(redisClient) { { "key", "val2" } };
             Assert.AreEqual(2, dictionary.Count);
         }
+
+        [Test]
+        public void ShouldReturnFalseIfDoesNotContainKey()
+        {
+            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val1" } };
+            Assert.IsFalse(dictionary.ContainsKey("NotExistingKey"));
+        }
+
+        [Test]
+        public void ShouldReturnTrueIfContainsKey()
+        {
+            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val1" } };
+            Assert.IsTrue(dictionary.ContainsKey("key1"));
+            Assert.IsTrue(dictionary.ContainsKey("key2"));
+        }
     }
 }

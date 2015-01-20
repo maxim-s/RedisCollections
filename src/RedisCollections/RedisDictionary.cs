@@ -67,7 +67,7 @@ namespace RedisCollections
         public bool IsReadOnly { get; private set; }
         public bool ContainsKey(TKey key)
         {
-            throw new NotImplementedException();
+            return redisClient.ContainsKey(CreateKey(key.SerializeToString()));
         }
 
         public void Add(TKey key, TValue value)
