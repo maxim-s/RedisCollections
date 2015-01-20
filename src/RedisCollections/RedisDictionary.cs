@@ -91,7 +91,13 @@ namespace RedisCollections
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            throw new NotImplementedException();
+            if (!ContainsKey(key))
+            {
+                value = default(TValue);
+                return false;
+            }
+            value = this[key];
+            return true;
         }
 
         public TValue this[TKey key]
