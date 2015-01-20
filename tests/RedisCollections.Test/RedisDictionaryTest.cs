@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using ServiceStack.Redis;
 
@@ -108,6 +109,34 @@ namespace RedisCollections.Test
             Assert.False(dictionary.ContainsKey("key1"));
             Assert.False(dictionary.ContainsKey("key2"));
             Assert.AreEqual(0, dictionary.Count);
+        }
+
+        [Test]
+        public void ShouldAddKeyValuePair()
+        {
+            var kvp = new KeyValuePair<string, string>("key1", "val1");
+            var dictionary = new RedisDictionary<string, string>(redisClient);
+            dictionary.Add(kvp);
+            Assert.IsTrue(dictionary.ContainsKey("key1"));
+            Assert.AreEqual(1, dictionary.Count);
+            Assert.AreEqual("val1", dictionary["key1"]);
+        }
+
+        [Test]
+        public void ShouldReturnFalseIfDoesNotContainKeyValuePair()
+        {
+            var kvp = new KeyValuePair<string, string>("key1", "val1");
+            var dictionary = new RedisDictionary<string, string>(redisClient);
+            Assert.IsFalse(dictionary.Contains(kvp));
+        }
+
+        [Test]
+        public void ShouldReturnTrueIfContainsKeyValuePair()
+        {
+            var kvp = new KeyValuePair<string, string>("key1", "val1");
+            var dictionary = new RedisDictionary<string, string>(redisClient);
+            dictionary.Add(kvp);
+            Assert.IsTrue(dictionary.Contains(kvp));
         }
     }
 }

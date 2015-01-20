@@ -36,7 +36,7 @@ namespace RedisCollections
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            throw new NotImplementedException();
+            Add(item.Key, item.Value);
         }
 
         public void Clear()
@@ -50,7 +50,7 @@ namespace RedisCollections
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            throw new NotImplementedException();
+            return ContainsKey(item.Key);
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
