@@ -55,8 +55,7 @@ namespace RedisCollections
             TValue val;
             if (TryGetValue(item.Key, out val))
             {
-                return 
-                    (item.Value == null && val == null) || item.Value.Equals(val);
+                return EqualityComparer<TValue>.Default.Equals(val, item.Value);
             }
 
             return false;
