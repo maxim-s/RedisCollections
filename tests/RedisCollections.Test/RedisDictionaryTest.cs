@@ -169,7 +169,6 @@ namespace RedisCollections.Test
             dictionary.Add(kvp);
             dictionary.Add(kvp1);
 
-	        var c = dictionary.Keys;
             CollectionAssert.AreEquivalent(new[] { "key1", "key2" }, dictionary.Keys);
         }
 
@@ -183,6 +182,32 @@ namespace RedisCollections.Test
             dictionary.Add(kvp1);
 
             CollectionAssert.AreEquivalent(new[] { 1, 2 }, dictionary.Keys);
+        }
+
+        [Test]
+        public void Values_ShouldReturnAllAddedValues()
+        {
+            var kvp = new KeyValuePair<int, string>(1, "val1");
+            var kvp1 = new KeyValuePair<int, string>(2, "val2");
+            var dictionary = new RedisDictionary<int, string>(redisClient);
+
+            dictionary.Add(kvp);
+            dictionary.Add(kvp1);
+
+            CollectionAssert.AreEquivalent(new[] { "val1", "val2" }, dictionary.Values);
+        }
+
+        [Test]
+        public void Values_ShouldReturnAllAddedValues_ValueTypes()
+        {
+            var kvp = new KeyValuePair<int, int>(1, 3);
+            var kvp1 = new KeyValuePair<int, int>(2, 4);
+            var dictionary = new RedisDictionary<int, int>(redisClient);
+
+            dictionary.Add(kvp);
+            dictionary.Add(kvp1);
+
+            CollectionAssert.AreEquivalent(new[] { 3, 4 }, dictionary.Values);
         }
     }
 }
