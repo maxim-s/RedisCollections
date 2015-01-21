@@ -191,7 +191,31 @@ namespace RedisCollections.Test
             var dictionary = new RedisDictionary<string, string>(redisClient);
             dictionary.Add(kvp);
 
-            Assert.IsFalse(dictionary.Remove("key1"));
+            Assert.IsTrue(dictionary.Remove("key1"));
+        }
+
+        [Test]
+        public void Remove_ShouldDeleteKey_KeyExists()
+        {
+            var kvp = new KeyValuePair<string, string>("key1", "val1");
+            var dictionary = new RedisDictionary<string, string>(redisClient);
+            dictionary.Add(kvp);
+
+            dictionary.Remove("key1");
+
+            Assert.IsFalse(dictionary.ContainsKey("key1"));
+        }
+
+        [Test]
+        public void Remove_ShouldDeleteKey_KeyAbsent()
+        {
+            var kvp = new KeyValuePair<string, string>("key1", "val1");
+            var dictionary = new RedisDictionary<string, string>(redisClient);
+            dictionary.Add(kvp);
+
+            dictionary.Remove("key2");
+
+            Assert.IsFalse(dictionary.ContainsKey("key2"));
         }
 
         [Test]
@@ -252,6 +276,40 @@ namespace RedisCollections.Test
             dictionary.Add(kvp1);
 
             CollectionAssert.AreEquivalent(new[] { 3, 4 }, dictionary.Values);
+        }
+
+        [Test]
+        public void Remove_ShouldReturnTrue_KeyValuePairExists()
+        {
+            var kvp = new KeyValuePair<int, int>(1, 3);
+            var dictionary = new RedisDictionary<int, int>(redisClient);
+
+            dictionary.Add(kvp);
+
+            Assert.IsTrue(dictionary.Remove(new KeyValuePair<int, int>(1, 3)));
+        }
+
+        [Test]
+        public void Remove_ShouldReturnFalse_WrongKey()
+        {
+            var kvp = new KeyValuePair<int, int>(1, 3);
+            var dictionary = new RedisDictionary<int, int>(redisClient);
+
+            dictionary.Add(kvp);
+
+            Assert.IsFalse(dictionary.Remove(new KeyValuePair<int, int>(2, 3)));
+        }
+
+
+        [Test]
+        public void Remove_ShouldReturnTrue_WrongValue()
+        {
+            var kvp = new KeyValuePair<int, int>(1, 3);
+            var dictionary = new RedisDictionary<int, int>(redisClient);
+
+            dictionary.Add(kvp);
+
+            Assert.IsFalse(dictionary.Remove(new KeyValuePair<int, int>(1, 4)));
         }
     }
 }
