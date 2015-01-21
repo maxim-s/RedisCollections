@@ -63,7 +63,27 @@ namespace RedisCollections
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            if (array == null)
+            {
+                throw new ArgumentNullException("array can't be null");
+            }
+
+            if (arrayIndex < 0 || arrayIndex > array.Length)
+            {
+                throw new ArgumentException("incorrect index value");
+            }
+
+            if (array.Length - arrayIndex < Count)
+            {
+                throw new ArgumentException("Array is too small");
+            }
+
+            redisClient.GetAll<TValue>(GetRedisKeys()).Each((i, pair) =>
+            {
+                array[i] = new KeyValuePair<TKey, TValue>(
+                    pair.Key.TrimPrefixes(instanceKey).ToOrDefaultValue<TKey>(), pair.Value);
+
+            });
         }
 
         public bool Remove(KeyValuePair<TKey, TValue> item)

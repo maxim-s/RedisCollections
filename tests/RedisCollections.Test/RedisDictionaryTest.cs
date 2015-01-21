@@ -50,6 +50,50 @@ namespace RedisCollections.Test
         public void ShoudThrowArgumentNullExceptionIfKeyIsNull()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { null, "val1" } };
+        } 
+        
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CopyTo_NegativeAsIndexParam_ExceptionThrown()
+        {
+            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, {"key2","val2"} };
+            dictionary.CopyTo(new KeyValuePair<string, string>[2], -1);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CopyTo_IndexGreaterThanArrayLength_ExceptionThrown()
+        {
+            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val2" } };
+            dictionary.CopyTo(new KeyValuePair<string, string>[2], 4);
+        }
+
+        [Test]
+        public void CopyTo_SimpleValues_Copied()
+        {
+            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val2" } };
+            var keyValuePairs = new KeyValuePair<string, string>[2];
+            dictionary.CopyTo(keyValuePairs, 0);
+            Assert.AreEqual("key1",keyValuePairs[0].Key);
+            Assert.AreEqual("val1",keyValuePairs[0].Value);
+            Assert.AreEqual("key2",keyValuePairs[1].Key);
+            Assert.AreEqual("val2",keyValuePairs[1].Value);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CopyTo_ArrayLengthLessThanAvailableItemsCount_ExceptionThrown()
+        {
+            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val2" } };
+            dictionary.CopyTo(new KeyValuePair<string, string>[1], 0);
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void CopyTo_NullAsArrayParam_ExceptionThrown()
+        {
+            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val2" } };
+            dictionary.CopyTo(null, 0);
         }
 
         [Test]
