@@ -127,13 +127,25 @@ namespace RedisCollections
         {
             get
             {
-                return redisClient.SearchKeys(searchPattern)
-                                    .Select(a => a.TrimPrefixes(instanceKey).ToOrDefaultValue<TKey>())
-                                    .ToList();
+                return GetRedisKeys()
+                           .Select(a => a.TrimPrefixes(instanceKey).ToOrDefaultValue<TKey>())
+                           .ToList();
             }
         }
 
-        public ICollection<TValue> Values { get; private set; }
+        public ICollection<TValue> Values
+        {
+            get
+            {
+                var keys = GetRedisKeys();
+                return redisClient.GetValues<TValue>(keys);
+            }
+        }
+
+        private List<string> GetRedisKeys()
+        {
+            return redisClient.SearchKeys(searchPattern);
+        }
 
         private static void CheckForNull(TKey key)
         {
