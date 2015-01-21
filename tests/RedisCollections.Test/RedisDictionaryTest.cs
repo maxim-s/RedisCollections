@@ -137,6 +137,7 @@ namespace RedisCollections.Test
             var dictionary = new RedisDictionary<string, string>(redisClient);
             dictionary.Add(kvp);
             Assert.IsTrue(dictionary.Contains(kvp));
+            Assert.IsFalse(dictionary.Contains(new KeyValuePair<string, string>("key1", "val2")));
         }
 
         [Test]
