@@ -46,26 +46,6 @@ namespace RedisCollections.Test
             Assert.IsFalse(dictionary.GetEnumerator().MoveNext());
         }
 
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void Current_JustCreatedDictionary_ExceptionThrown()
-        {
-            var dictionary = new RedisDictionary<string, string>(redisClient);
-            var current = dictionary.GetEnumerator().Current;
-        }
-
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void Current_InvokeMoreThanItemsCount_ExceptionThrown()
-        {
-            var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val2" } };
-            var enumerator = dictionary.GetEnumerator();
-            enumerator.MoveNext();
-            enumerator.MoveNext();
-            enumerator.MoveNext();
-            var current = enumerator.Current;
-        }
-
 
         [Test]
         public void MoveNext_InvokeCountTimes_True()

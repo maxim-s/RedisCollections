@@ -28,73 +28,7 @@ namespace RedisCollections
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            return new Enumerator(this);
-        }
-
-        internal struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
-        {
-            private IDictionary<TKey, TValue> dictionary;
-            private readonly TKey[] keys;
-            private int index;
-            private KeyValuePair<TKey, TValue> current;
-
-            internal Enumerator(IDictionary<TKey, TValue> dictionary)
-            {
-                this.dictionary = dictionary;
-                this.keys = dictionary.Keys.ToArray();
-                index = 0;
-                this.current = new KeyValuePair<TKey, TValue>();
-            }
-
-
-            public void Dispose()
-            {
-                this.dictionary = null;
-            }
-
-            public bool MoveNext()
-            {
-                while ((uint)index < (uint)keys.Length)
-                {
-                    current = new KeyValuePair<TKey, TValue>(keys[index], dictionary[keys[index]]);
-                    index++;
-                    return true;
-                }
-
-                index = keys.Length + 1;
-                current = new KeyValuePair<TKey, TValue>();
-                return false;
-            }
-
-            public void Reset()
-            {
-                index = 0;
-                current = new KeyValuePair<TKey, TValue>();
-            }
-
-            public KeyValuePair<TKey, TValue> Current
-            {
-                get { return GetCurrent(); }
-            }
-
-            private KeyValuePair<TKey, TValue> GetCurrent()
-            {
-                CheckState();
-                return current;
-            }
-
-            object IEnumerator.Current
-            {
-                get { return GetCurrent(); }
-            }
-
-            private void CheckState()
-            {
-                if (index == 0 || (index == keys.Length + 1))
-                {
-                    throw new InvalidOperationException("Can't perfom enumerate operation");
-                }
-            }
+            return Keys.Select(key => new KeyValuePair<TKey, TValue>(key,this[key])).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
