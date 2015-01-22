@@ -195,7 +195,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Remove_ShouldDeleteKey_KeyExists()
+        public void Remove_DeleteKey_KeyExists()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var dictionary = new RedisDictionary<string, string>(redisClient);
@@ -207,7 +207,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Remove_ShouldDeleteKey_KeyAbsent()
+        public void Remove_DeleteKey_KeyAbsent()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var dictionary = new RedisDictionary<string, string>(redisClient);
@@ -253,7 +253,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Values_ShouldReturnAllAddedValues()
+		public void Values_AllValuesAdded()
         {
             var kvp = new KeyValuePair<int, string>(1, "val1");
             var kvp1 = new KeyValuePair<int, string>(2, "val2");
@@ -266,7 +266,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Values_ShouldReturnAllAddedValues_ValueTypes()
+		public void Values_AllValuesAdded_ValueTypes()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var kvp1 = new KeyValuePair<int, int>(2, 4);
@@ -279,7 +279,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Remove_ShouldReturnTrue_KeyValuePairExists()
+        public void Remove_True_KeyValuePairExists()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var dictionary = new RedisDictionary<int, int>(redisClient);
@@ -290,7 +290,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Remove_ShouldReturnFalse_WrongKey()
+        public void Remove_False_WrongKey()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var dictionary = new RedisDictionary<int, int>(redisClient);
@@ -302,7 +302,7 @@ namespace RedisCollections.Test
 
 
         [Test]
-        public void Remove_ShouldReturnTrue_WrongValue()
+        public void Remove_False_WrongValue()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var dictionary = new RedisDictionary<int, int>(redisClient);
