@@ -88,7 +88,9 @@ namespace RedisCollections
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            throw new NotImplementedException();
+            CheckForNull(item.Key);
+
+            return Contains(item) && RemoveCore(item.Key);
         }
 
         public int Count
@@ -122,7 +124,7 @@ namespace RedisCollections
         {
             CheckForNull(key);
 
-            return redisClient.Del(key.SerializeToString()) > 0;
+            return RemoveCore(key);
         }
 
         public bool TryGetValue(TKey key, out TValue value)
@@ -164,6 +166,11 @@ namespace RedisCollections
         private List<string> GetRedisKeys()
         {
             return redisClient.SearchKeys(searchPattern);
+        }
+
+        private bool RemoveCore(TKey key)
+        {
+            return redisClient.Del(CreateKey(key.SerializeToString())) > 0;
         }
 
         private static void CheckForNull(TKey key)
