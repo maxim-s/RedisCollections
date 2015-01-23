@@ -7,7 +7,7 @@ using ServiceStack.Redis;
 
 namespace RedisCollections
 {
-    public class RedisDictionary<TKey,TValue> : IDictionary<TKey, TValue>
+    public class RedisDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         private readonly RedisClient redisClient;
         private readonly string instanceKey;
@@ -28,7 +28,7 @@ namespace RedisCollections
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return Keys.Select(key => new KeyValuePair<TKey, TValue>(key,this[key])).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -175,7 +175,7 @@ namespace RedisCollections
 
         private static void CheckForNull(TKey key)
         {
-            if (!typeof (TKey).IsValueType() && key == null)
+            if (!typeof(TKey).IsValueType() && key == null)
             {
                 throw new ArgumentNullException("Key cannot be null");
             }
