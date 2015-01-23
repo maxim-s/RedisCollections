@@ -141,7 +141,7 @@ namespace RedisCollections
         public TValue this[TKey key]
         {
             get { return redisClient.Get<TValue>(CreateKey(key.SerializeToString())); }
-            set { throw new NotImplementedException(); }
+            set { redisClient.Set(CreateKey(key.SerializeToString()), value); }
         }
 
         public ICollection<TKey> Keys

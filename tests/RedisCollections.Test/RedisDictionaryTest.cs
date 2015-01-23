@@ -253,7 +253,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-		public void Values_AllValuesAdded()
+        public void Values_AllValuesAdded()
         {
             var kvp = new KeyValuePair<int, string>(1, "val1");
             var kvp1 = new KeyValuePair<int, string>(2, "val2");
@@ -266,7 +266,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-		public void Values_AllValuesAdded_ValueTypes()
+        public void Values_AllValuesAdded_ValueTypes()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var kvp1 = new KeyValuePair<int, int>(2, 4);
@@ -310,6 +310,30 @@ namespace RedisCollections.Test
             dictionary.Add(kvp);
 
             Assert.IsFalse(dictionary.Remove(new KeyValuePair<int, int>(1, 4)));
+        }
+
+
+        [Test]
+        public void Index_StoredValue()
+        {
+            var kvp = new KeyValuePair<string, string>("key1", "val1");
+            var dictionary = new RedisDictionary<string, string>(redisClient);
+
+            dictionary.Add(kvp);
+
+            Assert.AreEqual("val1", dictionary["key1"]);
+        }
+
+
+        [Test]
+        public void Index_StoredValue_ValueType()
+        {
+            var kvp = new KeyValuePair<int, int>(1, 3);
+            var dictionary = new RedisDictionary<int, int>(redisClient);
+
+            dictionary.Add(kvp);
+
+            Assert.AreEqual(3, dictionary[1]);
         }
     }
 }
