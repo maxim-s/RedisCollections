@@ -29,6 +29,18 @@ namespace RedisCollections.Test
             redisClient.FlushAll();
         }
 
+
+        [Test]
+        public void Constructor_NonEmptyNameSpace_ShouldBeApplied()
+        {
+            var dictionaryWithNs = new RedisDictionary<string, string>(redisClient, "ns123") { { "key1", "val1" } };
+            var dictionaryAutoNs = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" } };
+            Assert.IsTrue(dictionaryWithNs.NameSpace.Contains("ns123"));
+            Assert.IsFalse(dictionaryAutoNs.NameSpace.Contains("ns123"));
+            Assert.AreEqual(1, dictionaryAutoNs.Count);
+            Assert.AreEqual(1, dictionaryWithNs.Count);
+        }
+
         [Test]
         public void ShouldAddItem()
         {
