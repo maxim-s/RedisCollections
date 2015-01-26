@@ -10,20 +10,33 @@ namespace RedisCollections
     public class RedisDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         private readonly RedisClient redisClient;
-        private readonly string instanceKey;
+        private readonly string nameSpace;
+
+        public string NameSpace
+        {
+            get { return nameSpace; }
+        }
+
         private readonly string searchPattern;
 
         private string CreateKey(string key)
         {
-            return string.Format("{0}{1}", instanceKey, key);
+            return string.Format("{0}{1}", nameSpace, key);
         }
 
         public RedisDictionary(RedisClient redisClient)
         {
             this.redisClient = redisClient;
 
-            instanceKey = string.Format("{0}::", Guid.NewGuid());
-            searchPattern = string.Format("{0}*", instanceKey);
+            nameSpace = string.Format("{0}::", Guid.NewGuid());
+            searchPattern = string.Format("{0}*", nameSpace);
+        }
+
+        public RedisDictionary(RedisClient redisClient, string nameSpace)
+        {
+            this.redisClient = redisClient;
+            this.nameSpace = string.Format("{0}::", string.IsNullOrWhiteSpace(nameSpace)?Guid.NewGuid().ToString():nameSpace);
+            searchPattern = string.Format("{0}*", this.nameSpace);
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
@@ -81,7 +94,7 @@ namespace RedisCollections
             redisClient.GetAll<TValue>(GetRedisKeys()).Each((i, pair) =>
             {
                 array[i] = new KeyValuePair<TKey, TValue>(
-                    pair.Key.TrimPrefixes(instanceKey).ToOrDefaultValue<TKey>(), pair.Value);
+                    pair.Key.TrimPrefixes(nameSpace).ToOrDefaultValue<TKey>(), pair.Value);
 
             });
         }
@@ -149,7 +162,7 @@ namespace RedisCollections
             get
             {
                 return GetRedisKeys()
-                           .Select(a => a.TrimPrefixes(instanceKey).ToOrDefaultValue<TKey>())
+                           .Select(a => a.TrimPrefixes(nameSpace).ToOrDefaultValue<TKey>())
                            .ToList();
             }
         }
