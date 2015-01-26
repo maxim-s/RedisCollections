@@ -42,7 +42,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void ShouldAddItem()
+        public void Add_AddItem()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" } };
             Assert.AreEqual(dictionary["key1"], "val1");
@@ -50,7 +50,7 @@ namespace RedisCollections.Test
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
-        public void ShoudThrowArgumentExceptionIfAddTheSameKey()
+		public void Add_AddExistingKey_ThrowArgumentNullException()
         {
 
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" } };
@@ -59,7 +59,7 @@ namespace RedisCollections.Test
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ShoudThrowArgumentNullExceptionIfKeyIsNull()
+        public void Add_KeyIsNull_ThrowArgumentNullException()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { null, "val1" } };
         } 
@@ -117,7 +117,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void ShouldReturnItemsCount()
+        public void Count_NumberOfItems()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val1" } };
             new RedisDictionary<string, string>(redisClient) { { "key", "val2" } };
@@ -125,14 +125,14 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void ShouldReturnFalseIfDoesNotContainKey()
+        public void ContainsKey_NotExistingKey_False()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val1" } };
             Assert.IsFalse(dictionary.ContainsKey("NotExistingKey"));
         }
 
         [Test]
-        public void ShouldReturnTrueIfContainsKey()
+        public void ContainsKey_ExistingKey_True()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val1" } };
             Assert.IsTrue(dictionary.ContainsKey("key1"));
@@ -149,7 +149,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void ShouldReturnTrueIfCanGetValue()
+        public void TryGetValue_ExistingKey_True()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val1" } };
             string res;
@@ -158,7 +158,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void ShouldClearAll()
+        public void Clear_AllItemsAreRemoved()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val1" } };
             dictionary.Clear();
@@ -168,7 +168,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void ShouldAddKeyValuePair()
+        public void Add_NewKeyValuePair_Added()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var dictionary = new RedisDictionary<string, string>(redisClient);
@@ -179,7 +179,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void ShouldReturnFalseIfDoesNotContainKeyValuePair()
+        public void Contains_NotExistingKeyValuePair_False()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var dictionary = new RedisDictionary<string, string>(redisClient);
@@ -187,7 +187,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void ShouldReturnTrueIfContainsKeyValuePair()
+        public void Contains_ExistingKeyValuePair_True()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var dictionary = new RedisDictionary<string, string>(redisClient);
@@ -197,7 +197,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void RemoveShouldReturnTrueIfKeyExists()
+        public void Remove_KeyExists_True()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var dictionary = new RedisDictionary<string, string>(redisClient);
@@ -207,7 +207,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Remove_DeleteKey_KeyExists()
+        public void Remove_KeyExists_DeleteKey()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var dictionary = new RedisDictionary<string, string>(redisClient);
@@ -219,7 +219,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Remove_DeleteKey_KeyAbsent()
+        public void Remove_KeyAbsent_DeleteKey()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var dictionary = new RedisDictionary<string, string>(redisClient);
@@ -231,7 +231,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void RemoveShouldReturnFalseIfNoKey()
+        public void Remove_KeyNotExisits_False()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var dictionary = new RedisDictionary<string, string>(redisClient);
@@ -241,7 +241,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void KeysShouldReturnAllAddedKeys()
+        public void Keys_AddedKeys()
         {
             var kvp = new KeyValuePair<string, string>("key1", "val1");
             var kvp1 = new KeyValuePair<string, string>("key2", "val1");
@@ -253,7 +253,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void KeysShouldReturnAllAddedKeysOnValueTypes()
+        public void Keys_ValueKeyType_AddedKeys()
         {
             var kvp = new KeyValuePair<int, string>(1, "val1");
             var kvp1 = new KeyValuePair<int, string>(2, "val1");
@@ -265,7 +265,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Values_AllValuesAdded()
+        public void Values_AddedValues()
         {
             var kvp = new KeyValuePair<int, string>(1, "val1");
             var kvp1 = new KeyValuePair<int, string>(2, "val2");
@@ -278,7 +278,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Values_AllValuesAdded_ValueTypes()
+        public void Values_ValueValueType_AddedValues()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var kvp1 = new KeyValuePair<int, int>(2, 4);
@@ -291,7 +291,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Remove_True_KeyValuePairExists()
+        public void Remove_KeyValuePairExists_True()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var dictionary = new RedisDictionary<int, int>(redisClient);
@@ -302,7 +302,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Remove_False_WrongKey()
+        public void Remove_WrongKey_False()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var dictionary = new RedisDictionary<int, int>(redisClient);
@@ -314,7 +314,7 @@ namespace RedisCollections.Test
 
 
         [Test]
-        public void Remove_False_WrongValue()
+        public void Remove_WrongValue_False()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var dictionary = new RedisDictionary<int, int>(redisClient);
@@ -338,7 +338,7 @@ namespace RedisCollections.Test
 
 
         [Test]
-        public void Index_StoredValue_ValueType()
+        public void Index_ValueType_StoredValue()
         {
             var kvp = new KeyValuePair<int, int>(1, 3);
             var dictionary = new RedisDictionary<int, int>(redisClient);
