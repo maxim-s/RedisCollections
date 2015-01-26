@@ -42,7 +42,7 @@ namespace RedisCollections.Test
         }
 
         [Test]
-        public void Add_AddItem()
+        public void Add_ItemAdded()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" } };
             Assert.AreEqual(dictionary["key1"], "val1");
@@ -50,7 +50,7 @@ namespace RedisCollections.Test
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
-		public void Add_AddExistingKey_ThrowArgumentNullException()
+        public void Add_AddExistingKey_ArgumentExceptionThrown()
         {
 
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" } };
@@ -59,14 +59,14 @@ namespace RedisCollections.Test
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Add_KeyIsNull_ThrowArgumentNullException()
+        public void Add_KeyIsNull_ArgumentExceptionThrown()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { null, "val1" } };
         } 
         
         [Test]
         [ExpectedException(typeof(ArgumentException))]
-        public void CopyTo_NegativeAsIndexParam_ExceptionThrown()
+        public void CopyTo_NegativeAsIndexParam_ArgumentExceptionThrown()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, {"key2","val2"} };
             dictionary.CopyTo(new KeyValuePair<string, string>[2], -1);
@@ -74,7 +74,7 @@ namespace RedisCollections.Test
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
-        public void CopyTo_IndexGreaterThanArrayLength_ExceptionThrown()
+        public void CopyTo_IndexGreaterThanArrayLength_ArgumentExceptionThrown()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val2" } };
             dictionary.CopyTo(new KeyValuePair<string, string>[2], 4);
@@ -94,7 +94,7 @@ namespace RedisCollections.Test
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
-        public void CopyTo_ArrayLengthLessThanAvailableItemsCount_ExceptionThrown()
+        public void CopyTo_ArrayLengthLessThanAvailableItemsCount_ArgumentExceptionThrown()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val2" } };
             dictionary.CopyTo(new KeyValuePair<string, string>[1], 0);
@@ -102,7 +102,7 @@ namespace RedisCollections.Test
 
         [Test]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void CopyTo_NullAsArrayParam_ExceptionThrown()
+        public void CopyTo_NullAsArrayParam_ArgumentNullExceptionThrown()
         {
             var dictionary = new RedisDictionary<string, string>(redisClient) { { "key1", "val1" }, { "key2", "val2" } };
             dictionary.CopyTo(null, 0);
