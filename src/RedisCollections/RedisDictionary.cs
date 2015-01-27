@@ -11,6 +11,7 @@ namespace RedisCollections
     {
         private readonly RedisClient redisClient;
         private readonly string nameSpace;
+        private const string GlobalNameSpace = "DICTIONARY-GLOBAL";
 
         public string NameSpace
         {
@@ -24,18 +25,18 @@ namespace RedisCollections
             return string.Format("{0}{1}", nameSpace, key);
         }
 
-        public RedisDictionary(RedisClient redisClient)
+        internal RedisDictionary(RedisClient redisClient)
         {
             this.redisClient = redisClient;
 
-            nameSpace = string.Format("{0}::", Guid.NewGuid());
+            nameSpace = string.Format("{0}::", GlobalNameSpace);
             searchPattern = string.Format("{0}*", nameSpace);
         }
 
-        public RedisDictionary(RedisClient redisClient, string nameSpace)
+        internal RedisDictionary(RedisClient redisClient, string nameSpace)
         {
             this.redisClient = redisClient;
-            this.nameSpace = string.Format("{0}::", string.IsNullOrWhiteSpace(nameSpace)?Guid.NewGuid().ToString():nameSpace);
+            this.nameSpace = string.Format("{0}::", string.IsNullOrWhiteSpace(nameSpace)?GlobalNameSpace:nameSpace);
             searchPattern = string.Format("{0}*", this.nameSpace);
         }
 
