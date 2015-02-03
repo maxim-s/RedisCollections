@@ -16,5 +16,10 @@ namespace RedisCollections
         {
             return new RedisDictionary<TKey, TValue>(redisClient, nameSpace);
         }
+
+        public IList<T> GetList<T>(string listName)
+        {
+            return new RedisList<T>(redisClient, listName);
+        }
     }
 }

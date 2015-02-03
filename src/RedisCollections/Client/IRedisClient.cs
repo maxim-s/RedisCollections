@@ -17,5 +17,11 @@ namespace RedisCollections.Client
         bool Del(string key);
         void FlushAll();
         void Dispose();
+
+        void RPush<T>(string list, params T[] values);
+        bool LRem<T>(string list, T obj);
+        int LLen(string list);
+        T LIndex<T>(string list, int index);
+        void LSet<T>(string list, int index, T obj);
     }
 }
