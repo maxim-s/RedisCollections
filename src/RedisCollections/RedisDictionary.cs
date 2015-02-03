@@ -100,14 +100,11 @@ namespace RedisCollections
             var i = 0;
             foreach (var value in values)
             {
-                array[i]= new KeyValuePair<TKey, TValue>(ToObject<TKey>(value.Key),value.Value);
+                array[i] = new KeyValuePair<TKey, TValue>(value.Key.TrimPrefixes(nameSpace).ToOrDefaultValue<TKey>(), value.Value);
+                i++;
             }
         }
 
-        private T ToObject<T>(string g)
-        {
-            return default(T);
-        }
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {

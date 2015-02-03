@@ -8,9 +8,19 @@ namespace RedisCollections.Extensions
 {
     static class StringExtensions
     {
-        public static string TrimPrefixes(this string s, string pattern)
+        public static string TrimPrefixes(this string fromString, params string[] prefixes)
         {
-            return string.Empty;
+            if (string.IsNullOrEmpty(fromString))
+                return fromString;
+
+            foreach (var prefix in prefixes)
+            {
+                if (fromString.StartsWith(prefix))
+                    return fromString.Substring(prefix.Length);
+            }
+
+            return fromString;
         }
+
     }
 }

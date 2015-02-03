@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RedisCollections.Client;
 
 namespace RedisCollections.Extensions
 {
@@ -10,12 +11,12 @@ namespace RedisCollections.Extensions
     {
         public static string SerializeToString<T>(this T t)
         {
-            return string.Empty;
+            return Serializer.Serialize(t);
         }
 
         public static T ToOrDefaultValue<T>(this string toSerialize)
         {
-            return default(T);
+            return Serializer.Deserialize<T>(toSerialize);
         }
     }
 }

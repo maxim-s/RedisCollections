@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,13 +8,13 @@ namespace RedisCollections.Client
     public interface IRedisClient
     {
         void RemoveAll(List<string> keys);
-        IDictionary<string,T> GetAll<T>(List<string> getRedisKeys);
+        IDictionary<string, T> GetAll<T>(List<string> keys);
         List<string> SearchKeys(string searchPattern);
-        bool ContainsKey(string createKey);
-        void Set<T>(string createKey, T value);
-        T Get<T>(string createKey);
+        bool ContainsKey(string key);
+        void Set<T>(string key, T value);
+        T Get<T>(string key);
         ICollection<T> GetValues<T>(List<string> keys);
-        bool Del(string createKey);
+        bool Del(string key);
         void FlushAll();
         void Dispose();
     }
