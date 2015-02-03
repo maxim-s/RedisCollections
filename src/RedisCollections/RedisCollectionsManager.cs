@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using ServiceStack.Redis;
+using RedisCollections.Client;
 
 namespace RedisCollections
 {
     public class RedisCollectionsManager
     {
-        private readonly RedisClient redisClient;
+        private readonly IRedisClient redisClient;
 
-        public RedisCollectionsManager(RedisClient redisClient)
+        public RedisCollectionsManager(IRedisClient redisClient)
         {
             this.redisClient = redisClient;
         }

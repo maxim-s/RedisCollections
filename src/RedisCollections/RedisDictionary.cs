@@ -1,15 +1,16 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using ServiceStack;
-using ServiceStack.Redis;
+using RedisCollections.Client;
+using RedisCollections.Extensions;
 
 namespace RedisCollections
 {
     public class RedisDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        private readonly RedisClient redisClient;
+        private readonly IRedisClient redisClient;
         private readonly string nameSpace;
         private const string GlobalNameSpace = "DICTIONARY-GLOBAL";
 
@@ -25,7 +26,7 @@ namespace RedisCollections
             return string.Format("{0}{1}", nameSpace, key);
         }
 
-        internal RedisDictionary(RedisClient redisClient)
+        internal RedisDictionary(IRedisClient redisClient)
         {
             this.redisClient = redisClient;
 
@@ -33,7 +34,7 @@ namespace RedisCollections
             searchPattern = string.Format("{0}*", nameSpace);
         }
 
-        internal RedisDictionary(RedisClient redisClient, string nameSpace)
+        internal RedisDictionary(IRedisClient redisClient, string nameSpace)
         {
             this.redisClient = redisClient;
             this.nameSpace = string.Format("{0}::", string.IsNullOrWhiteSpace(nameSpace)?GlobalNameSpace:nameSpace);
@@ -92,13 +93,18 @@ namespace RedisCollections
                 throw new ArgumentException("Array is too small");
             }
 
-            redisClient.GetAll<TValue>(GetRedisKeys()).Each((i, pair) =>
-            {
-                array[i] = new KeyValuePair<TKey, TValue>(
-                    pair.Key.TrimPrefixes(nameSpace).ToOrDefaultValue<TKey>(), pair.Value);
+            var list = new List<KeyValuePair<TKey, TValue>>();
 
-            });
+            IDictionary<string, TValue> values = redisClient.GetAll<TValue>(GetRedisKeys());
+
+            var i = 0;
+            foreach (var value in values)
+            {
+                array[i] = new KeyValuePair<TKey, TValue>(value.Key.TrimPrefixes(nameSpace).ToOrDefaultValue<TKey>(), value.Value);
+                i++;
+            }
         }
+
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
@@ -131,7 +137,7 @@ namespace RedisCollections
             {
                 throw new ArgumentException("An item with the same key has already been added.");
             }
-            redisClient.Set(CreateKey(key.SerializeToString()), value);
+            redisClient.Set<TValue>(CreateKey(key.SerializeToString()), value);
         }
 
         public bool Remove(TKey key)
@@ -184,12 +190,12 @@ namespace RedisCollections
 
         private bool RemoveCore(TKey key)
         {
-            return redisClient.Del(CreateKey(key.SerializeToString())) > 0;
+            return redisClient.Del(CreateKey(key.SerializeToString()));
         }
 
         private static void CheckForNull(TKey key)
         {
-            if (!typeof(TKey).IsValueType() && key == null)
+            if (!typeof(TKey).IsValueType && key == null)
             {
                 throw new ArgumentNullException("Key cannot be null");
             }

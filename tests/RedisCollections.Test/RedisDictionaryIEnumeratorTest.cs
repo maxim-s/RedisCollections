@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using CSRedis;
 using NUnit.Framework;
-using ServiceStack.Redis;
+using RedisCollections.Client;
+using IRedisClient = RedisCollections.Client.IRedisClient;
 
 namespace RedisCollections.Test
 {
@@ -14,12 +16,12 @@ namespace RedisCollections.Test
         }
 
         private static RedisCollectionsManager redisCollectionsManager;
-        private static RedisClient redisClient;
+        private static IRedisClient redisClient;
 
         [TestFixtureSetUp]
         public void Init()
         {
-            redisClient = new RedisClient();
+            redisClient = new Redis(new RedisClient("localhost"));
             redisCollectionsManager = new RedisCollectionsManager(redisClient);
         }
 
