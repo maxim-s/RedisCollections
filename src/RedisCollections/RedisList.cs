@@ -113,8 +113,7 @@ namespace RedisCollections
 
         public void RemoveAt(int index)
         {
-            var value = this[index];
-            Remove(value);
+            throw new NotImplementedException();
         }
 
         public T this[int index]
