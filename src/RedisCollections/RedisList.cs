@@ -34,7 +34,7 @@ namespace RedisCollections
 
         public void Add(T item)
         {
-            redisClient.RPush(list, item);
+            redisClient.Add(list, item);
         }
 
         public void Clear()
@@ -72,14 +72,14 @@ namespace RedisCollections
 
         public bool Remove(T item)
         {
-            return redisClient.LRem(list, item);
+            return redisClient.Remove(list, item);
         }
 
         public int Count 
         { 
             get
             {
-                return redisClient.LLen(list);
+                return redisClient.Count(list);
             }
         }
 
@@ -119,8 +119,8 @@ namespace RedisCollections
 
         public T this[int index]
         {
-            get { return redisClient.LIndex<T>(list, index); }
-            set { redisClient.LSet(list, index, value); }
+            get { return redisClient.Index<T>(list, index); }
+            set { redisClient.Set(list, index, value); }
         }
     }
 }

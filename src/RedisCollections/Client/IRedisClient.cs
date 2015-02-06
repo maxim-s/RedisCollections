@@ -18,10 +18,10 @@ namespace RedisCollections.Client
         void FlushAll();
         void Dispose();
 
-        void RPush<T>(string list, params T[] values);
-        bool LRem<T>(string list, T obj);
-        int LLen(string list);
-        T LIndex<T>(string list, int index);
-        void LSet<T>(string list, int index, T obj);
+        void Add<T>(string list, params T[] values);
+        bool Remove<T>(string list, T obj);
+        int Count(string list);
+        T Index<T>(string list, int index);
+        void Set<T>(string list, int index, T obj);
     }
 }
