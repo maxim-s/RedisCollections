@@ -113,7 +113,14 @@ namespace RedisCollections
 
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            var tail = redisClient.Range<T>(list, index + 1, redisClient.Count(list));
+            
+            redisClient.Multi();
+
+            redisClient.Trim(list, 0, index - 1);
+            redisClient.Push(list, tail);
+            
+            redisClient.Exec();
         }
 
         public T this[int index]

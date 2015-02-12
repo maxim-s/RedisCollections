@@ -98,5 +98,30 @@ namespace RedisCollections.Client
         {
             redisClient.LSet(list, index, Serializer.Serialize(obj));
         }
+
+		public IEnumerable<T> Range<T>(string list, int start, int stop)
+	    {
+			return redisClient.LRange(list, start, stop).Select(Serializer.Deserialize<T>);
+	    }
+
+	    public void Multi()
+	    {
+		    redisClient.Multi();
+	    }
+
+		public void Exec()
+		{
+			redisClient.Exec();
+		}
+
+	    public void Trim(string list, int start, int stop)
+	    {
+		    redisClient.LTrim(list, start, stop);
+	    }
+
+	    public void Push<T>(string list, IEnumerable<T> collection)
+	    {
+			redisClient.RPush(list, collection.Select(a => (object) Serializer.Serialize(a)).ToArray());
+	    }
     }
 }

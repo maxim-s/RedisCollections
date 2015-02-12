@@ -23,5 +23,11 @@ namespace RedisCollections.Client
         int Count(string list);
         T Index<T>(string list, int index);
         void Set<T>(string list, int index, T obj);
+        IEnumerable<T> Range<T>(string list, int start, int stop);
+
+        void Multi();
+        void Exec();
+        void Trim(string list, int start, int stop);
+        void Push<T>(string list, IEnumerable<T> collection);
     }
 }

@@ -203,5 +203,22 @@ namespace RedisCollections.Test
 
             Assert.AreEqual(0, list.IndexOf("item1"));
         }
+
+        [Test]
+        [Ignore]
+        public void RemoveAt_ExistionIndex_ItemRemoved()
+        {
+            var list = redisCollectionsManager.GetList<string>("list");
+
+            list.Add("item1");
+            list.Add("item2");
+            list.Add("item3");
+            list.Add("item4");
+
+            list.RemoveAt(1);
+
+            Assert.AreEqual(3, list.Count);
+            Assert.IsFalse(list.Contains("item2"));
+        }
     }
 }
