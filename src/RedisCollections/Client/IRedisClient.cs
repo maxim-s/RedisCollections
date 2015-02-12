@@ -17,5 +17,6 @@ namespace RedisCollections.Client
         bool Del(string key);
         void FlushAll();
         void Dispose();
+        bool AddToSet<T>(string name, T item);
     }
 }

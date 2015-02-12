@@ -16,5 +16,10 @@ namespace RedisCollections
         {
             return new RedisDictionary<TKey, TValue>(redisClient, nameSpace);
         }
+
+        public ISet<T> GetSet<T>()
+        {
+            return new RedisSet<T>(redisClient);
+        }
     }
 }

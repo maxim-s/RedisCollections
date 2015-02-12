@@ -73,5 +73,10 @@ namespace RedisCollections.Client
         {
             redisClient.Dispose();
         }
+
+        public bool AddToSet<T>(string name,T item)
+        {
+            return redisClient.SAdd(name, item) == 1;
+        }
     }
 }
