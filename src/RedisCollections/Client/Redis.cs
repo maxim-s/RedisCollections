@@ -78,5 +78,10 @@ namespace RedisCollections.Client
         {
             return redisClient.SAdd(name, item) == 1;
         }
+
+        public bool ContainsInSet<T>(string name,T item)
+        {
+            return redisClient.SIsMember(name, item);
+        }
     }
 }

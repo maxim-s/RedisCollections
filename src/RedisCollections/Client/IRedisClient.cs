@@ -18,5 +18,6 @@ namespace RedisCollections.Client
         void FlushAll();
         void Dispose();
         bool AddToSet<T>(string name, T item);
+        bool ContainsInSet<T>(string name, T item);
     }
 }

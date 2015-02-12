@@ -51,5 +51,21 @@ namespace RedisCollections.Test
             ISet<string> set = redisCollectionsManager.GetSet<string>();
             Assert.IsTrue(set.Add("val1"));
         }
+
+        [Test]
+        public void Contains_ExistingItem_True()
+        {
+            ISet<string> set = redisCollectionsManager.GetSet<string>();
+            Assert.IsTrue(set.Add("val1"));
+            Assert.IsTrue(set.Contains("val1"));
+        }
+
+        [Test]
+        public void Contains_NotExistingItem_False()
+        {
+            ISet<string> set = redisCollectionsManager.GetSet<string>();
+            Assert.IsTrue(set.Add("val2"));
+            Assert.IsFalse(set.Contains("val1"));
+        }
     }
 }

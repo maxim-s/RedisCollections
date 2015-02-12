@@ -95,7 +95,7 @@ namespace RedisCollections
 
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            return redisClient.ContainsInSet(Name,item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
