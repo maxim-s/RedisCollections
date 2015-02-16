@@ -17,5 +17,17 @@ namespace RedisCollections.Client
         bool Del(string key);
         void FlushAll();
         void Dispose();
+
+        void Add<T>(string list, params T[] values);
+        bool Remove<T>(string list, T obj);
+        int Count(string list);
+        T Index<T>(string list, int index);
+        void Set<T>(string list, int index, T obj);
+        IEnumerable<T> Range<T>(string list, int start, int stop);
+
+        void Multi();
+        void Exec();
+        void Trim(string list, int start, int stop);
+        void Push<T>(string list, IEnumerable<T> collection);
     }
 }

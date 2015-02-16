@@ -55,6 +55,7 @@
     <Compile Include="RedisDictionaryIEnumeratorTest.cs" />
     <Compile Include="RedisDictionaryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RedisListTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\RedisCollections\RedisCollections.csproj">

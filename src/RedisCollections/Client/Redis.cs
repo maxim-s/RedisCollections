@@ -73,5 +73,55 @@ namespace RedisCollections.Client
         {
             redisClient.Dispose();
         }
+
+        public void Add<T>(string list, params T[] values)
+        {
+            redisClient.RPush(list, values.Select(Serializer.Serialize).ToArray());
+        }
+
+        public bool Remove<T>(string list, T obj)
+        {
+            return redisClient.LRem(list, -1, Serializer.Serialize(obj)) > 0;
+        }
+
+        public int Count(string list)
+        {
+            return (int)redisClient.LLen(list);
+        }
+
+        public T Index<T>(string list, int index)
+        {
+            return Serializer.Deserialize<T>(redisClient.LIndex(list, index));
+        }
+
+        public void Set<T>(string list, int index, T obj)
+        {
+            redisClient.LSet(list, index, Serializer.Serialize(obj));
+        }
+
+		public IEnumerable<T> Range<T>(string list, int start, int stop)
+	    {
+			return redisClient.LRange(list, start, stop).Select(Serializer.Deserialize<T>);
+	    }
+
+	    public void Multi()
+	    {
+		    redisClient.Multi();
+	    }
+
+		public void Exec()
+		{
+			redisClient.Exec();
+		}
+
+	    public void Trim(string list, int start, int stop)
+	    {
+		    redisClient.LTrim(list, start, stop);
+	    }
+
+	    public void Push<T>(string list, IEnumerable<T> collection)
+	    {
+			redisClient.RPush(list, collection.Select(a => (object) Serializer.Serialize(a)).ToArray());
+	    }
     }
 }
