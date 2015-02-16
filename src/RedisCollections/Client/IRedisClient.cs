@@ -19,5 +19,15 @@ namespace RedisCollections.Client
         void Dispose();
         bool AddToSet<T>(string name, T item);
         bool ContainsInSet<T>(string name, T item);
+        bool Remove<T>(string list, T obj);
+        int Count(string list);
+        T Index<T>(string list, int index);
+        void Set<T>(string list, int index, T obj);
+        IEnumerable<T> Range<T>(string list, int start, int stop);
+        void Add<T>(string list, params T[] values);
+        void Multi();
+        void Exec();
+        void Trim(string list, int start, int stop);
+        void Push<T>(string list, IEnumerable<T> collection);
     }
 }
